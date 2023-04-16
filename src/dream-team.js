@@ -16,6 +16,10 @@ const { NotImplementedError } = require("../extensions/index.js");
 function createDreamTeam(members) {
   let name = [];
 
+  if (!Array.isArray(members)) {
+    return false;
+  }
+
   for (let elem of Object.values(members)) {
     if (typeof elem == "string") {
       elem = elem.split(" ").join("");
