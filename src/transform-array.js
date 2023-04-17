@@ -14,27 +14,18 @@ const { NotImplementedError } = require("../extensions/index.js");
  *
  */
 
-let transform = function (arr) {
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] === "--discard-next") {
-      let result = arr.slice(0, i) + "," + arr.slice(i + 2);
-      let newArray = result.split(",");
-      return newArray;
-    } else if (arr[i] === "--discard-prev") {
-      let result = arr.slice(0, i - 1) + "," + arr.slice(i + 1);
-      let newArray = result.split(",");
-      return newArray;
-    } else if (arr[i] === "--double-next") {
-      let result = arr.slice(0, i) + "," + arr[i + 1] + "," + arr.slice(i + 1);
-      let newArray = result.split(",");
-      return newArray;
-    } else if (arr[i] === "--double-prev") {
-      let result = arr.slice(0, i) + "," + arr[i - 1] + "," + arr.slice(i + 1);
-      let newArray = result.split(",");
-      return newArray;
-    }
-  }
-};
+let transform = (arr) =>
+  arr.flatMap((v, i, a) => {
+    if (a[i + 1] === "--discard-prev") return [];
+    if (a[i - 1] === "--double-next") return [v, v];
+    if (a[i + 1] === "--double-prev") return [v, v];
+
+    if (v.toString().startsWith("--d")) return [];
+
+    if (!Array.isArray(arr))
+      throw new Error("'arr' parameter must be an instance of the Array!");
+    return v;
+  });
 
 module.exports = {
   transform,
